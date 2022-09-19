@@ -30,7 +30,6 @@ namespace AzureNamingTool.Controllers
         /// <param name="password">string - New Admin Password</param>
         /// <param name="adminpassword">Current Admin Password</param>
         /// <returns>string - Successful update</returns>
-
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> UpdatePassword([BindRequired][FromHeader(Name = "AdminPassword")] string adminpassword, [FromBody] string password)
@@ -76,7 +75,6 @@ namespace AzureNamingTool.Controllers
         /// <param name="apikey">string - New API Key</param>
         /// <param name="adminpassword">Current Admin Password</param>
         /// <returns>dttring - Successful update</returns>
-
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> UpdateAPIKey([BindRequired][FromHeader(Name = "AdminPassword")] string adminpassword, [FromBody] string apikey)
