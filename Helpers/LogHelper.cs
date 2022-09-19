@@ -1,4 +1,5 @@
 ﻿using AzureNamingTool.Models;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace AzureNamingTool.Helpers
@@ -14,14 +15,25 @@ namespace AzureNamingTool.Helpers
             List<GeneratedName> lstGeneratedNames = new();
             try
             {
-                string data = await FileSystemHelper.ReadFile("generatednames.json");
-                var items = new List<GeneratedName>();
-                var options = new JsonSerializerOptions
+                // Check if the data is already in cache
+                if (GeneralHelper.GetCacheObject("generatednames.json") == null)
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    PropertyNameCaseInsensitive = true
-                };
-                lstGeneratedNames = JsonSerializer.Deserialize<List<GeneratedName>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
+                    string data = await FileSystemHelper.ReadFile("generatednames.json");
+                    var items = new List<GeneratedName>();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        PropertyNameCaseInsensitive = true
+                    };
+                    lstGeneratedNames = JsonSerializer.Deserialize<List<GeneratedName>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
+                    // Write the log to cache
+                    GeneralHelper.SetCacheObject("generatednames.json", lstGeneratedNames);
+                }
+                else
+                {
+                    // Get the log to cache
+                    lstGeneratedNames = (List<GeneratedName>)GeneralHelper.GetCacheObject("generatednames.json");
+                }
             }
             catch (Exception ex)
             {
@@ -54,6 +66,8 @@ namespace AzureNamingTool.Helpers
                 lstGeneratedNames.Add(lstGeneratedName);
                 var jsonGeneratedNames = JsonSerializer.Serialize(lstGeneratedNames);
                 await FileSystemHelper.WriteFile("generatednames.json", jsonGeneratedNames);
+                // Clear the cache data
+                GeneralHelper.InvalidateCacheObject("generatednames.json");
             }
             catch (Exception ex)
             {
@@ -70,6 +84,8 @@ namespace AzureNamingTool.Helpers
             try
             {
                 await FileSystemHelper.WriteFile("generatednames.json", "[]");
+                // Write the log to cache
+                GeneralHelper.InvalidateCacheObject("generatednames.json");
             }
             catch (Exception ex)
             {
@@ -85,15 +101,26 @@ namespace AzureNamingTool.Helpers
         {
             List<AdminLogMessage> lstAdminLogMessages = new();
             try
-            {
-                string data = await FileSystemHelper.ReadFile("adminlog.json");
-                var items = new List<AdminLogMessage>();
-                var options = new JsonSerializerOptions
+            {                // Check if the data is already in cache
+                if (GeneralHelper.GetCacheObject("adminlog.json") == null)
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    PropertyNameCaseInsensitive = true
-                };
-                lstAdminLogMessages = JsonSerializer.Deserialize<List<AdminLogMessage>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
+                    string data = await FileSystemHelper.ReadFile("adminlog.json");
+                    var items = new List<AdminLogMessage>();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        PropertyNameCaseInsensitive = true
+                    };
+                    lstAdminLogMessages = JsonSerializer.Deserialize<List<AdminLogMessage>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
+                    // Write the log to cache
+                    GeneralHelper.SetCacheObject("adminlog.json", lstAdminLogMessages);
+                }
+                else
+                {
+                    // Get the log to cache
+                    lstAdminLogMessages = (List<AdminLogMessage>)GeneralHelper.GetCacheObject("adminlog.json");
+                }
+
             }
             catch (Exception ex)
             {
@@ -131,6 +158,8 @@ namespace AzureNamingTool.Helpers
                 lstAdminLogMessages.Add(adminmessage);
                 var jsonAdminLogMessages = JsonSerializer.Serialize(lstAdminLogMessages);
                 await FileSystemHelper.WriteFile("adminlog.json", jsonAdminLogMessages);
+                // Clear the cache data
+                GeneralHelper.InvalidateCacheObject("adminlog.json");
             }
             catch (Exception)
             {
@@ -147,6 +176,8 @@ namespace AzureNamingTool.Helpers
             try
             {
                 await FileSystemHelper.WriteFile("adminlog.json", "[]");
+                // Write the log to cache
+                GeneralHelper.InvalidateCacheObject("adminlog.json");
             }
             catch (Exception ex)
             {

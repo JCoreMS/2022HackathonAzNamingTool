@@ -8,6 +8,11 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Extensions.Caching.Memory;
+using System.Linq.Expressions;
+using System.Security.AccessControl;
+using System.Runtime.Caching;
+using MemoryCache = System.Runtime.Caching.MemoryCache;
 
 namespace AzureNamingTool.Helpers
 {
@@ -73,20 +78,29 @@ namespace AzureNamingTool.Helpers
             try
             {
                 String data = String.Empty;
-                data = typeof(T).Name switch
+                // Check if the data is already in cache
+                if (GetCacheObject(typeof(T).Name) == null)
                 {
-                    nameof(ResourceComponent) => await FileSystemHelper.ReadFile("resourcecomponents.json"),
-                    nameof(ResourceEnvironment) => await FileSystemHelper.ReadFile("resourceenvironments.json"),
-                    nameof(ResourceLocation) => await FileSystemHelper.ReadFile("resourcelocations.json"),
-                    nameof(ResourceOrg) => await FileSystemHelper.ReadFile("resourceorgs.json"),
-                    nameof(ResourceProjAppSvc) => await FileSystemHelper.ReadFile("resourceprojappsvcs.json"),
-                    nameof(ResourceType) => await FileSystemHelper.ReadFile("resourcetypes.json"),
-                    nameof(ResourceUnitDept) => await FileSystemHelper.ReadFile("resourceunitdepts.json"),
-                    nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
-                    nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
-                    nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
-                    _ => "[]",
-                };
+                    data = typeof(T).Name switch
+                    {
+                        nameof(ResourceComponent) => await FileSystemHelper.ReadFile("resourcecomponents.json"),
+                        nameof(ResourceEnvironment) => await FileSystemHelper.ReadFile("resourceenvironments.json"),
+                        nameof(ResourceLocation) => await FileSystemHelper.ReadFile("resourcelocations.json"),
+                        nameof(ResourceOrg) => await FileSystemHelper.ReadFile("resourceorgs.json"),
+                        nameof(ResourceProjAppSvc) => await FileSystemHelper.ReadFile("resourceprojappsvcs.json"),
+                        nameof(Models.ResourceType) => await FileSystemHelper.ReadFile("resourcetypes.json"),
+                        nameof(ResourceUnitDept) => await FileSystemHelper.ReadFile("resourceunitdepts.json"),
+                        nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
+                        nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
+                        nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
+                        _ => "[]",
+                    };
+                    SetCacheObject(typeof(T).Name, data);
+                }
+                else
+                {
+                    data = (string)GetCacheObject(typeof(T).Name);
+                }
                 var items = new List<T>();
                 if (data != "[]")
                 {
@@ -129,7 +143,7 @@ namespace AzureNamingTool.Helpers
                     case nameof(ResourceProjAppSvc):
                         await FileSystemHelper.WriteConfiguation(items, "resourceprojappsvcs.json");
                         break;
-                    case nameof(ResourceType):
+                    case nameof(Models.ResourceType):
                         await FileSystemHelper.WriteConfiguation(items, "resourcetypes.json");
                         break;
                     case nameof(ResourceUnitDept):
@@ -147,6 +161,9 @@ namespace AzureNamingTool.Helpers
                     default:
                         break;
                 }
+
+                // Update the cache with the latest data
+                SetCacheObject(typeof(T).Name, items);                
             }
             catch (Exception ex)
             {
@@ -370,7 +387,7 @@ namespace AzureNamingTool.Helpers
             return valid;
         }
 
-        public static Tuple<bool, string, StringBuilder> ValidateGeneratedName(ResourceType resourceType, string name, string delimiter)
+        public static Tuple<bool, string, StringBuilder> ValidateGeneratedName(Models.ResourceType resourceType, string name, string delimiter)
         {
             try
             {
@@ -547,7 +564,7 @@ namespace AzureNamingTool.Helpers
             return newname;
         }
 
-        public static async Task<string> GetOfficialVersion()
+        public static async Task<string> GetLatestVersion()
         {
             try
             {
@@ -558,13 +575,69 @@ namespace AzureNamingTool.Helpers
                     .Descendants("Version")
                     .First()
                     .Value;
-                    return result;
+                return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogHelper.LogAdminMessage("ERROR", ex.Message);
                 return null;
             }
         }
+
+
+        public static object GetCacheObject(string cachekey)
+        {
+            try
+            {                
+                ObjectCache memoryCache = MemoryCache.Default;                
+                var encodedCache = memoryCache.Get(cachekey);
+                if (encodedCache == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return (object)encodedCache;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                return null;
+            }
+        }
+
+
+        public static void SetCacheObject(string cachekey, object cachedata)
+        {
+            try
+            {
+                ObjectCache memoryCache = MemoryCache.Default;
+                var cacheItemPolicy = new CacheItemPolicy
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(300.0),
+
+                };
+                memoryCache.Set(cachekey, cachedata, cacheItemPolicy);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+            }
+        }
+
+        public static void InvalidateCacheObject(string cachekey)
+        {
+            try
+            {
+                ObjectCache memoryCache = MemoryCache.Default;
+                memoryCache.Remove(cachekey);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+            }
+        }
+
     }
 }

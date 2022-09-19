@@ -15,7 +15,7 @@
             <img src="images/AzureNamingToolLogo.png" height="160px;" alt="Azure Naming Tool" />
         </p>
         <p style="font-style:italic">
-            Current App Version: @appversion
+            Installed App Version: @appversion
         </p>
         <h4>Disclaimer</h4>
         <p>
@@ -69,13 +69,13 @@
             {
                 if (admin)
                 {
-                    var officialversion = await GeneralHelper.GetOfficialVersion();
+                    var latestversion = await GeneralHelper.GetLatestVersion();
                     if (!notificationshown)
                     {
                         // Check if the client's version matches the current offical version
-                        if (appversion != officialversion)
+                        if (appversion != latestversion)
                         {
-                            ShowVersionModal("bg-navcolor", "ATTENTION", "<p style='font-weight:bold;'>Your current version is out of date!</p><p>Please click <a href='" + updateurl + "' target='_blank'>here</a> to update to the current version for the latest features!</p><p><span style='font-weight:bold;'>Current Version:</span> <span style='font-style:italic; '>" + appversion + "</p><p><span style='font-weight:bold;'>Official version:</span> <span style='font-style:italic; '>" + officialversion + "</span></p>");
+                            ShowVersionModal("bg-navcolor", "ATTENTION", "<p style='font-weight:bold;'>Your current version is out of date!</p><p>Please click <a href='" + updateurl + "' target='_blank'>here</a> to update to the current version for the latest features!</p><p><span style='font-weight:bold;'>Installed Version:</span> <span style='font-style:italic; '>" + appversion + "</p><p><span style='font-weight:bold;'>Latest version:</span> <span style='font-style:italic; '>" + latestversion + "</span></p>");
                         }
                     }
                 }
