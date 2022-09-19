@@ -162,8 +162,24 @@ namespace AzureNamingTool.Helpers
                         break;
                 }
 
+                String data = String.Empty;
+                data = typeof(T).Name switch
+                {
+                    nameof(ResourceComponent) => await FileSystemHelper.ReadFile("resourcecomponents.json"),
+                    nameof(ResourceEnvironment) => await FileSystemHelper.ReadFile("resourceenvironments.json"),
+                    nameof(ResourceLocation) => await FileSystemHelper.ReadFile("resourcelocations.json"),
+                    nameof(ResourceOrg) => await FileSystemHelper.ReadFile("resourceorgs.json"),
+                    nameof(ResourceProjAppSvc) => await FileSystemHelper.ReadFile("resourceprojappsvcs.json"),
+                    nameof(Models.ResourceType) => await FileSystemHelper.ReadFile("resourcetypes.json"),
+                    nameof(ResourceUnitDept) => await FileSystemHelper.ReadFile("resourceunitdepts.json"),
+                    nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
+                    nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
+                    nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
+                    _ => "[]",
+                };
+                
                 // Update the cache with the latest data
-                SetCacheObject(typeof(T).Name, items);                
+                SetCacheObject(typeof(T).Name, data);                
             }
             catch (Exception ex)
             {
