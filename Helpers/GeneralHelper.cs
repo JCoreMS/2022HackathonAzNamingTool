@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AzureNamingTool.Helpers
 {
@@ -544,6 +545,26 @@ namespace AzureNamingTool.Helpers
                 newname = newname.ToLower();
             }
             return newname;
+        }
+
+        public static async Task<string> GetOfficialVersion()
+        {
+            try
+            {
+                var response = await DownloadString("https://raw.githubusercontent.com/microsoft/CloudAdoptionFramework/master/ready/AzNamingTool/AzureNamingTool.csproj");
+                XDocument xdoc = XDocument.Parse(response);
+                string result = xdoc
+                    .Descendants("PropertyGroup")
+                    .Descendants("Version")
+                    .First()
+                    .Value;
+                    return result;
+            }
+            catch(Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                return null;
+            }
         }
     }
 }
