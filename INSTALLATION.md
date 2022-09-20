@@ -6,13 +6,13 @@
 
 [How To Install](#how-to-install)
 
-* [Run as a Docker image](#run-as-a-docker-image)
+* [Run as a Docker image](#run-as-a-docker-image) (Local development)
 
-* [Run as a Web App for Containers](#run-as-a-web-app-for-containers)
+* [Run as a Web App for Containers](#run-as-a-web-app-for-containers) (Single container running in an Azure App Service)
 
-* [Run as an Azure Container App](#run-as-an-azure-container-app)
+* [Run as an Azure Container App](#run-as-an-azure-container-app) (Single container running in an Azure Contrainer App)
 
-* [Run as a Stand-Alone Site](#run-as-a-stand-alone-site)
+* [Run as a Stand-Alone Site](#run-as-a-stand-alone-site) 
 
 ## How To Install
 
