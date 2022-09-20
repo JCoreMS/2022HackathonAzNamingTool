@@ -42,6 +42,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="FAQ.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="FAQ.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\Screenshots\AdminPasswordPrompt.png" />
     <None Include="wwwroot\Screenshots\Containers1.png" />
     <None Include="wwwroot\Screenshots\ConfigurationPage.png" />
