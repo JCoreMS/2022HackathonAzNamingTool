@@ -10,7 +10,7 @@ namespace AzureNamingTool.Services
     {
         private static ServiceResponse serviceResponse = new();
 
-        public static async Task<ServiceResponse> ExportConfig()
+        public static async Task<ServiceResponse> ExportConfig(bool includeadmin = false)
         {
             try
             {
@@ -57,10 +57,13 @@ namespace AzureNamingTool.Services
                 configdata.CustomComponents = serviceResponse.ResponseObject;
 
                 // Get the security settings
-                var config = GeneralHelper.GetConfigurationData();
-                configdata.SALTKey = config.SALTKey;
-                configdata.AdminPassword = config.AdminPassword;
-                configdata.APIKey = config.APIKey;
+                if (includeadmin)
+                {
+                    var config = GeneralHelper.GetConfigurationData();
+                    configdata.SALTKey = config.SALTKey;
+                    configdata.AdminPassword = config.AdminPassword;
+                    configdata.APIKey = config.APIKey;
+                }
 
                 serviceResponse.ResponseObject = configdata;
                 serviceResponse.Success = true;
@@ -93,9 +96,18 @@ namespace AzureNamingTool.Services
                 // Set the security settings
                 var config = GeneralHelper.GetConfigurationData();
 
-                config.SALTKey = configdata.SALTKey;
-                config.AdminPassword = configdata.AdminPassword;
-                config.APIKey = configdata.APIKey;
+                if (configdata.SALTKey != null)
+                {
+                    config.SALTKey = configdata.SALTKey;
+                }
+                if(configdata.AdminPassword != null)
+                {
+                    config.AdminPassword = configdata.AdminPassword;
+                }
+                if (configdata.APIKey != null)
+                {
+                    config.APIKey = configdata.APIKey;
+                }
 
                 var jsonWriteOptions = new JsonSerializerOptions()
                 {
