@@ -4,6 +4,8 @@
 
 <img src="./wwwroot/images/AzureNamingToolLogo.png?raw=true" alt="Azure Naming Tool" title="Azure Naming Tool" height="150"/>
 
+[Choosing an Installation Option](#choosing-an-installation-option)
+
 [How To Install](#how-to-install)
 
 * [Run as a Docker image](#run-as-a-docker-image) (Local development)
@@ -14,7 +16,7 @@
 
 * [Run as a Stand-Alone Site](#run-as-a-stand-alone-site) 
 
-## Choosing How To Install
+## Choosing An Installation Option
 The Azure Naming Tool was designed to be deployed in nearly any environment. This includes as a stand-alone application, or as a container. Each deployment option offers pros/cons, depending on your environment and level of experience. Here is a break-down of the deployment options:
 
 * **Docker**
