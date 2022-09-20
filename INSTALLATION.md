@@ -8,7 +8,7 @@
 
 * [Run as a Docker image](#run-as-a-docker-image)
 
-* [Run as an Azure App Service Container](#run-as-an-azure-app-service-container)
+* [Run as a Web App for Containers](#run-as-a-web-app-for-containers)
 
 * [Run as an Azure Container App](#run-as-an-azure-container-app)
 
@@ -67,7 +67,8 @@ docker run -d -p 8081:80 --mount source=azurenamingtoolvol,target=/app/settings 
 
 ***
 
-### Run as an Azure App Service Container
+### Run as a Web App for Containers
+(App Service running a container)
 
 The Azure Naming Tool requires persistent storage for the configuration files when run as a container. The following processes will explain how to create this volume for your Azure App Service Container. All configuration JSON files will be stored in the volume to ensure the configuration is persisted.
 
