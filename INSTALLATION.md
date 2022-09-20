@@ -6,13 +6,40 @@
 
 [How To Install](#how-to-install)
 
-* [Run as a Docker image](#run-as-a-docker-image)
+* [Run as a Docker image](#run-as-a-docker-image) (Local development)
 
-* [Run as an Azure App Service Container](#run-as-an-azure-app-service-container)
+* [Run as a Web App for Containers](#run-as-a-web-app-for-containers) (Single container running in an Azure App Service)
 
-* [Run as an Azure Container App](#run-as-an-azure-container-app)
+* [Run as an Azure Container App](#run-as-an-azure-container-app) (Single container running in an Azure Container App)
 
-* [Run as a Stand-Alone Site](#run-as-a-stand-alone-site)
+* [Run as a Stand-Alone Site](#run-as-a-stand-alone-site) 
+
+## Choosing How To Install
+The Azure Naming Tool was designed to be deployed in nearly any environment. This includes as a stand-alone application, or as a container. Each deployment option offers pros/cons, depending on your environment and level of experience. Here is a break-down of the deployment options:
+
+* **Docker**
+  * Ideal for local deployments
+  * Requires docker engine installed in environment
+  * Requires storage volume mount
+
+* **Azure App Service**
+  * Ideal for fastest deployment
+  * Requires Azure App Service
+  * Can be integrated for continuous deployment from GitHub
+
+* **Web App for Container**
+  * Ideal for single container installations
+  * Requires Azure App Service
+  * Requires Azure Storage account / Azure Files Fileshare for persistent storage 
+
+* **Azure Container App**
+  * Ideal for multiple container installations (integration with other containers, services, etc.)
+  * Requires Azure Container App
+  * Requires Azure Storage account / Azure Files Fileshare for persistent storage 
+
+* **Stand-alone site**
+  * Ideal for legacy deployments
+  * Requires web server deployment (IIS, Apache, etc.)
 
 ## How To Install
 
@@ -66,8 +93,60 @@ docker run -d -p 8081:80 --mount source=azurenamingtoolvol,target=/app/settings 
 > Substitute 8081 for the port you used in the docker run command
 
 ***
+### Run as an Azure App Service
 
-### Run as an Azure App Service Container
+(.NET application, non-container)
+
+This process will allow you to deploy the Azure Naming Tool as a .NET application in an Azure App Service. This is the fastest deployment option and allows you to deploy and utilize your installation in minutes. This process includes creating a fork of the repository, then creatin an Azure App Service with direct integration to your repo. This will create a GitHub Action to deploy your repository code on every commit. 
+
+1. Scroll up to the top, left corner of this page.
+2. Click on the **CloudAdoptionFramework** link to open the root of this repository.
+3. Click the **Fork** option in the top right menu.
+4. Select your desired **Owner** and **Repository name** and click **Create fork**.
+5. In the Azure Portal, create a new resource.
+6. Search for **Web App** and select **Create**.
+
+   ![AppServiceInstall1](./wwwroot/Screenshots/AppServiceInstall1.png)
+
+8. On the **Create** tab, select the following options:
+
+   ![AppServiceInstall2](./wwwroot/Screenshots/AppServiceInstall2.png)  
+
+  - RuntimeStack: **.NET 6 (LTS)**
+  - Operating Systems: **Linux** (For lowest cost)
+9. Select desired options for all other settings and click **Next**.
+10. On the **Deployment** tab, select the following options:
+
+   ![AppServiceInstall3](./wwwroot/Screenshots/AppServiceInstall3.png)  
+
+  - Continuous deployment: **Enable**
+  - Authenticate to your GitHub account
+  - Organization: **Your desired organization**
+  - Repository: **Your desired repository**
+  - Branch: **Your desired branch** 
+11. Click **Review + create**.
+12. After the site is deployed, it is recommended that you enable Authentication on the app service. Choose your desired identity provider to ensure only authorized users can access your site.
+
+   ![AppServiceInstall4](./wwwroot/Screenshots/AppServiceInstall4.png)  
+
+13. In your GitHub repo, select the **Actions** tab.
+14. Review the new GitHub Action workflow definition file.
+
+   ![AppServiceInstall5](./wwwroot/Screenshots/AppServiceInstall5.png)  
+
+15. On your **Settings** tab, review the new **Secret* value for your deployment.
+
+   ![AppServiceInstall6](./wwwroot/Screenshots/AppServiceInstall6.png)  
+
+16. Access the site using your Azure App Service URL
+
+> **NOTE:**
+> It is recommended that you enable authentication on your Container App to prevent un-authorized access. [Authentication and authorization in Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/authentication)
+
+***
+
+### Run as a Web App for Containers
+(App Service running a container)
 
 The Azure Naming Tool requires persistent storage for the configuration files when run as a container. The following processes will explain how to create this volume for your Azure App Service Container. All configuration JSON files will be stored in the volume to ensure the configuration is persisted.
 
@@ -112,6 +191,9 @@ docker build -t azurenamingtool .
 
 14. Deploy the image from the Azure Container Registry to the Azure App Service: [Microsoft Docs reference](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=acr&pivots=container-linux)
 15. Access the site using your Azure App Service URL
+
+> **NOTE:**
+> It is recommended that you enable authentication on your Container App to prevent un-authorized access. [Authentication and authorization in Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/authentication)
 
 ***
 
