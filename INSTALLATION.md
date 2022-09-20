@@ -156,7 +156,7 @@ docker build -t azurenamingtool .
 12. Create an Azure Container App: [Quickstart: Deploy an existing container image with the Azure CLI](https://docs.microsoft.com/en-us/azure/container-apps/get-started-existing-container-image?tabs=bash&pivots=container-apps-public-registry)
 
 > **NOTE:**
-> It is possible to deploy a contasiner app via the portal, however, setitng the volume for persistent storage is much easier using the CLI. 
+> It is possible to deploy a container app via the portal, however, setting the volume for persistent storage is much easier using the CLI. 
   
 13. Configure Container App to use Azure Storage File share for volume: [Use storage mounts in Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/storage-mounts?pivots=aca-cli#azure-files)
 15. Access the site using your Azure App Service URL
@@ -233,5 +233,3 @@ To install as a stand-alone site:
 > Validate the project files extracted successfully and match the contents in the GitHub repository.
 
 6. In your IIS/Apache environment, create a new .NET application with the Azure Naming Tool source for the directory
-
-

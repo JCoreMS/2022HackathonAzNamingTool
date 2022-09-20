@@ -101,26 +101,15 @@ namespace AzureNamingTool.Helpers
         {
             List<AdminLogMessage> lstAdminLogMessages = new();
             try
-            {                // Check if the data is already in cache
-                if (GeneralHelper.GetCacheObject("adminlog.json") == null)
+            {
+                string data = await FileSystemHelper.ReadFile("adminlog.json");
+                var items = new List<AdminLogMessage>();
+                var options = new JsonSerializerOptions
                 {
-                    string data = await FileSystemHelper.ReadFile("adminlog.json");
-                    var items = new List<AdminLogMessage>();
-                    var options = new JsonSerializerOptions
-                    {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        PropertyNameCaseInsensitive = true
-                    };
-                    lstAdminLogMessages = JsonSerializer.Deserialize<List<AdminLogMessage>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
-                    // Write the log to cache
-                    GeneralHelper.SetCacheObject("adminlog.json", lstAdminLogMessages);
-                }
-                else
-                {
-                    // Get the log to cache
-                    lstAdminLogMessages = (List<AdminLogMessage>)GeneralHelper.GetCacheObject("adminlog.json");
-                }
-
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    PropertyNameCaseInsensitive = true
+                };
+                lstAdminLogMessages = JsonSerializer.Deserialize<List<AdminLogMessage>>(data, options).OrderByDescending(x => x.CreatedOn).ToList();
             }
             catch (Exception ex)
             {
@@ -158,8 +147,6 @@ namespace AzureNamingTool.Helpers
                 lstAdminLogMessages.Add(adminmessage);
                 var jsonAdminLogMessages = JsonSerializer.Serialize(lstAdminLogMessages);
                 await FileSystemHelper.WriteFile("adminlog.json", jsonAdminLogMessages);
-                // Clear the cache data
-                GeneralHelper.InvalidateCacheObject("adminlog.json");
             }
             catch (Exception)
             {

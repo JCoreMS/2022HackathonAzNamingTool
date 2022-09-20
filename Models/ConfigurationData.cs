@@ -16,8 +16,8 @@ namespace AzureNamingTool.Models
         public List<ResourceUnitDept> ResourceUnitDepts { get; set; }
         public List<ResourceFunction> ResourceFunctions { get; set; }
         public List<CustomComponent> CustomComponents { get; set; }
-        public string SALTKey { get; set; }
-        public string AdminPassword { get; set; }
-        public string APIKey { get; set; }
+        public string? SALTKey { get; set; }
+        public string? AdminPassword { get; set; }
+        public string? APIKey { get; set; }
     }
 }
