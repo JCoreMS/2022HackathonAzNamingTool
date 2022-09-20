@@ -125,8 +125,8 @@
 
 @code {
 
-    [CascadingParameter]
-    protected ThemeInfo? theme { get; set; }
+        [CascadingParameter]
+        protected ThemeInfo? theme { get; set; }
     private bool admin;
     private bool dataLoaded = false;
     List<AdminLogMessage> lstAdminLogMessages = new();
@@ -197,8 +197,8 @@
 
         if (enddate != null)
         {
-            if (message.CreatedOn > enddate)
-                visible = false;
+            if (message.CreatedOn > (enddate + new TimeSpan(23, 59, 59)))
+            visible = false;
         }
 
         if (!string.IsNullOrEmpty(filterData))

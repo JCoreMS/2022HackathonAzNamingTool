@@ -1,18 +1,38 @@
-﻿[Overview](./) | [Installation](INSTALLATION.md) | [Updating](UPDATING.md) | [Using the API](USINGTHEAPI.md) | [Version History](VERSIONHISTORY.md) 
+﻿[Overview](./) | [Installation](INSTALLATION.md) | [Updating](UPDATING.md) | [Using the API](USINGTHEAPI.md) | [Version History](VERSIONHISTORY.md) | [FAQ](FAQ.md)
 
 # Azure Naming Tool v2 - Version History
 
 <img src="./wwwroot/images/AzureNamingToolLogo.png?raw=true" alt="Azure Naming Tool" title="Azure Naming Tool" height="150"/>
 
-## Version 2.2.0 (current)
+## Version 2.3.0 (current)
+### Features
+- Added Search functionality to Admin Log
+- Added Search functionality to Generated Names Log
+- Added caching throughout application for performance/optimization
+- Added functionality to check for latest version. Admins will be prompted if the installed version is out of date.
+- Added FAQ page
+
+### Bug fixes
+- Fixed grammar/formatting issues in GitHub documentation
+- Updated resourcetypes.json with latest Azure resources
+- Added information/update prompt to Configuration page if resaourcetypes.json contains types with duplicate short names
+- Added option to display Latest News feed
+- Added option to exlcude Admin configuration from Global Backup functionality
+
+### Notes
+- This update includes resource type configuration changes. It is recommended that users refresh their Resource Type configuration using the built-in tool on the Configuration page.
+
+***
+
+## Version 2.2.0
 ### Features
 - Added VERSIONHISTORY.md file
 - Added ability to exclude resource type component for resource types
 - Added Latest Azure Naming Tool News feed to Home page (from twitter.com/azurenamingtool feed)
 - Added Custom Component functionality
-	- Updated Configuration page with new functionaliuty
-	- Updated Reference page to display custom components, if present
-	- Updated Generate page to display custom components, if present
+	- Updated Configuration page with new functionality
+	- Updated Reference page to display custom components if present
+	- Updated Generate page to display custom components if present
 	- Updated API - RequestName function to accept Custom Components
 
 ### Bug fixes
@@ -25,9 +45,6 @@
 - Added Resource Type to Generated Names Log
 - Updated Configuration page button styling
 - Updated Generate page component selection logic
-
-### Notes
-- This update includes resource type configuration changes. It is recommended that users refresh their Resource Type configuration using the built-in tool on the Configuration page.
 
 ***
 
@@ -48,4 +65,4 @@
 ***
 
 ## Version 2.0.0
-- Iinital release
+- Initial release
