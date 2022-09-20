@@ -113,6 +113,9 @@ docker build -t azurenamingtool .
 14. Deploy the image from the Azure Container Registry to the Azure App Service: [Microsoft Docs reference](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=acr&pivots=container-linux)
 15. Access the site using your Azure App Service URL
 
+> **NOTE:**
+> It is recommended that you enable authentication on your Container App to prevent un-authorized access. [Authentication and authorization in Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/authentication)
+
 ***
 
 ### Run as an Azure Container App
