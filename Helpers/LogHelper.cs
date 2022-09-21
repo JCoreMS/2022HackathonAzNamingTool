@@ -16,6 +16,7 @@ namespace AzureNamingTool.Helpers
         {
             try
             {
+                //create admin message
                 AdminLogMessage adminmessage = new()
                 {
                     Id = 1,
