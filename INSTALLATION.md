@@ -10,6 +10,8 @@
 
 * [Run as a Docker image](#run-as-a-docker-image) (Local development)
 
+* [Run as an Azure App Service](#run-as-an-azure-app-service) (.NET Application running in an Azure App Service, non-container)
+
 * [Run as a Web App for Containers](#run-as-a-web-app-for-containers) (Single container running in an Azure App Service)
 
 * [Run as an Azure Container App](#run-as-an-azure-container-app) (Single container running in an Azure Container App)
