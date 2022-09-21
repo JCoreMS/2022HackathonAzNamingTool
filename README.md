@@ -5,7 +5,7 @@
 <img src="./wwwroot/images/AzureNamingToolLogo.png?raw=true" alt="Azure Naming Tool" title="Azure Naming Tool" height="150"/>
 
 
-Stay up to date on new features and annoucements here;
+Stay up to date on new features and announcements here;
 
 [Twitter/AzureNamingTool](https://twitter.com/azurenamingtool)
 
