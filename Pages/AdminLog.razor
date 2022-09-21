@@ -140,6 +140,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        ServiceResponse serviceResponse = new();
         var result = await session.GetAsync<bool>("admin");
         admin = (bool)result.Value;
         if (!admin)
@@ -149,7 +150,9 @@
 
         if (firstRender)
         {
-            lstAdminLogMessages = await LogHelper.GetAdminLog();
+            serviceResponse = await AdminLogService.GetItems();
+            lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject;
+
             dataLoaded = true;
             StateHasChanged();
         }
@@ -168,14 +171,16 @@
 
     private async Task OnPurgeLogClick()
     {
+        ServiceResponse serviceResponse = new();
         bool confirm = false;
         confirm = await JsRuntime.InvokeAsync<bool>("confirm", "This will purge the Admin Log. Are you sure?");
         if (confirm)
         {
-            await LogHelper.PurgeAdminLog();
+            await AdminLogService.DeleteAllItems();
             toastService.ShowSuccess("Admin Log purged!", "SUCCESS");
             LogHelper.LogAdminMessage("ADMIN LOG", "Admin Log log purged.");
-            lstAdminLogMessages = await LogHelper.GetAdminLog();
+            serviceResponse = await AdminLogService.GetItems();
+            lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject;
             dataLoaded = true;
             StateHasChanged();
         }

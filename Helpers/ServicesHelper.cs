@@ -31,6 +31,10 @@ namespace AzureNamingTool.Helpers
                 servicesData.ResourceFunctions = (List<ResourceFunction>)serviceReponse.ResponseObject;
                 serviceReponse = await CustomComponentService.GetItems();
                 servicesData.CustomComponents = (List<CustomComponent>)serviceReponse.ResponseObject;
+                serviceReponse = await GeneratedNamesService.GetItems();
+                servicesData.GeneratedNames = (List<GeneratedName>)serviceReponse.ResponseObject;
+                serviceReponse = await AdminLogService.GetItems();
+                servicesData.AdminLogMessages = (List<AdminLogMessage>)serviceReponse.ResponseObject;
                 return servicesData;
             }
             catch(Exception ex)

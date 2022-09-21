@@ -93,6 +93,8 @@ namespace AzureNamingTool.Helpers
                         nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
                         nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
                         nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
+                        nameof(AdminLogMessage) => await FileSystemHelper.ReadFile("adminlog.json"),
+                        nameof(GeneratedName) => await FileSystemHelper.ReadFile("generatednames.json"),
                         _ => "[]",
                     };
                     SetCacheObject(typeof(T).Name, data);

@@ -19,6 +19,7 @@ namespace AzureNamingTool.Services
         /// <returns>ResourceNameResponse - Response of name generation</returns>
         public static async Task<ResourceNameResponse> RequestNameWithComponents(ResourceNameRequestWithComponents request)
         {
+            ServiceResponse serviceResponse = new();
             ResourceNameResponse response = new()
             {
                 Success = false
@@ -181,7 +182,7 @@ namespace AzureNamingTool.Services
                         ResourceName = name.ToLower(),
                         Components = lstComponents
                     };
-                    LogHelper.LogGeneratedName(generatedName);
+                    await GeneratedNamesService.PostItem(generatedName);
                     response.Success = true;
                     response.ResourceName = name.ToLower();
                     response.Message = sbMessage.ToString();
@@ -523,7 +524,7 @@ namespace AzureNamingTool.Services
                         Components = lstComponents,
                         ResourceTypeName = resourceType.Resource
                     };
-                    LogHelper.LogGeneratedName(generatedName);
+                    await GeneratedNamesService.PostItem(generatedName);
                     response.Success = true;
                     response.ResourceName = name.ToLower();
                     response.Message = sbMessage.ToString();

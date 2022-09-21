@@ -139,7 +139,7 @@
 </div>
 
 @code {
-    
+
     [CascadingParameter]
     protected ThemeInfo? theme { get; set; }
     private bool admin;
@@ -154,11 +154,14 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        ServiceResponse serviceResponse = new();
+
         if (firstRender)
         {
             var result = await session.GetAsync<bool>("admin");
             admin = (bool)result.Value;
-            lstNameRequests = await LogHelper.GetGeneratedNames();
+            serviceResponse = await GeneratedNamesService.GetItems();
+            lstNameRequests = (List<GeneratedName>)serviceResponse.ResponseObject;
             dataLoaded = true;
             StateHasChanged();
         }
@@ -178,14 +181,17 @@
 
     private async Task OnPurgeLogClick()
     {
+        ServiceResponse serviceResponse = new();
+
         bool confirm = false;
         confirm = await JsRuntime.InvokeAsync<bool>("confirm", "This will purge the Generated Names log. Are you sure?");
         if (confirm)
         {
-            await LogHelper.PurgeGeneratedNames();
+            await GeneratedNamesService.DeleteAllItems();
             toastService.ShowSuccess("Generated Log purged!", "SUCCESS");
             LogHelper.LogAdminMessage("GENERATED NAMES LOG", "Generated Names log purged.");
-            lstNameRequests = await LogHelper.GetGeneratedNames();
+            serviceResponse = await GeneratedNamesService.GetItems();
+            lstNameRequests = (List<GeneratedName>)serviceResponse.ResponseObject;
             StateHasChanged();
         }
     }
