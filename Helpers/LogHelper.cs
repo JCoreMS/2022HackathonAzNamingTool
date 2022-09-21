@@ -147,6 +147,16 @@ namespace AzureNamingTool.Helpers
         //        LogHelper.LogAdminMessage("ERROR", ex.Message);
         //    }
         //}
+                    lstAdminLogMessages = (List<AdminLogMessage>)GeneralHelper.GetCacheObject("adminlog.json");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+            }
+            return lstAdminLogMessages;
+        }
 
         /// <summary>
         /// This function logs the Admin message.
@@ -182,8 +192,6 @@ namespace AzureNamingTool.Helpers
                 lstAdminLogMessages.Add(adminmessage);
                 var jsonAdminLogMessages = JsonSerializer.Serialize(lstAdminLogMessages);
                 await FileSystemHelper.WriteFile("adminlog.json", jsonAdminLogMessages);
-                // Clear the cache data
-                GeneralHelper.InvalidateCacheObject("adminlog.json");
             }
             catch (Exception)
             {

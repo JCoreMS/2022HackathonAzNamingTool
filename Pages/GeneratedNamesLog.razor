@@ -212,7 +212,7 @@
 
         if (enddate != null)
         {
-            if (name.CreatedOn > enddate)
+            if (name.CreatedOn > (enddate + new TimeSpan(23, 59, 59)))
                 visible = false;
         }
 
