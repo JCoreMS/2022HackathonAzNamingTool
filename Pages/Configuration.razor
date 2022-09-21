@@ -78,10 +78,10 @@
                                                 <tr>
                                                     <td>
                                                         @item.DisplayName
-                                                        @if(item.IsCustom)
+                                                        @if (item.IsCustom)
                                                         {
                                                             <span>
-                                                             (CUSTOM)       
+                                                                (CUSTOM)
                                                             </span>
                                                         }
                                                     </td>
@@ -113,7 +113,7 @@
                                                             {
                                                                 <button type="button" class="btn btn-success" @onclick="@(e => FormAction("ResourceComponent",item.Id,"enable"))" title="Enable">
                                                                     <span class="oi oi-plus" aria-hidden="true"></span>
-                                                                </button>                                                                
+                                                                </button>
                                                                 @if (item.IsCustom)
                                                                 {
                                                                     <span> </span>
@@ -1066,7 +1066,6 @@
                                                             <option value="@category">@category</option>
                                                         }
                                                     </select>
-
                                                     <select @onchange="OnTypeChanged" class="form-control @theme.ThemeStyle">
                                                         <option value="">Select a resource type</option>
                                                         @foreach (var type in @ResourceTypeService.GetFilteredResourceTypes(servicesData.ResourceTypes, selectedResourceTypeCategory))
@@ -1081,6 +1080,19 @@
                                                             }
                                                         }
                                                     </select>
+
+                                                    <div class="form-group row mt-3">
+                                                        <div class="input-group flex-nowrap mb-3">
+                                                            <div class="input-group flex-nowrap mb-3">
+                                                                <span class="input-group-text" id="addon-wrapping">
+                                                                    <span class="oi oi-magnifying-glass" id="addon-wrapping"></span>
+                                                                </span>
+                                                                <input class="form-control" type="search" placeholder="Filter by Name, Short Name"
+                                                   @bind="filterData"
+                                                   @bind:event="oninput">
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </p>
                                                 <table class="table @theme.ThemeStyle">
                                                     <thead>
@@ -1098,6 +1110,8 @@
                                                     <tbody>
                                                         @foreach (var item in @servicesData.ResourceTypes)
                                                         {
+                                                            if (!IsTypeVisible(item))
+                                                                continue;
                                                             <tr>
                                                                 @if (item.Property != "")
                                                                 {
@@ -1613,6 +1627,8 @@
     private bool dataLoaded = false;
     private bool admin;
 
+    public string filterData { get; set; }
+
     private List<string> categories = new List<string>();
     private string? selectedResourceTypeCategory = "";
     private string? newComponentConfig;
@@ -1680,6 +1696,18 @@
     public void Dispose()
     {
         StateHasChanged();
+    }
+
+    public bool IsTypeVisible(ResourceType type)
+    {
+        bool visible = true;
+
+        if (!string.IsNullOrEmpty(filterData))
+        {
+            if ((!type.Resource.Contains(filterData, StringComparison.OrdinalIgnoreCase)) && (!type.ShortName.Contains(filterData, StringComparison.OrdinalIgnoreCase)))
+                visible = false;
+        }
+        return visible;
     }
 
     private async Task FormAction(string type, long id, string action, string parentcomponent = "")
@@ -2868,7 +2896,7 @@
                     }
                     break;
             }
-            servicesData = await ServicesHelper.LoadServicesData(servicesData, admin);            
+            servicesData = await ServicesHelper.LoadServicesData(servicesData, admin);
         }
         catch (Exception ex)
         {
