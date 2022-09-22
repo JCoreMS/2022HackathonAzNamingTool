@@ -222,17 +222,51 @@ namespace AzureNamingTool.Services
                 List<string[]> lstComponents = new();
                 ServiceResponse serviceresponse = new();
                 ResourceDelimiter resourceDelimiter = new();
+                ResourceType resourceType = null;
 
                 // Get the specified resource type
                 var resourceTypes = await GeneralHelper.GetList<ResourceType>();
-                var resourceType = resourceTypes.Find(x => x.ShortName == request.ResourceType);
-                if (resourceType == null)
+                var resourceTypesByShortName = resourceTypes.FindAll(x => x.ShortName == request.ResourceType);
+                if (resourceTypesByShortName == null)
                 {
                     valid = false;
                     response.Message = "ResourceType value is invalid.";
                     response.Success = false;
                     return response;
                 }
+                else
+                {
+                    // Check if there are duplicates
+                    if(resourceTypesByShortName.Count > 1)
+                    {
+                        // Check that the request includes a resource name
+                        if(request.Resource != null)
+                        {
+                            // Check if the resource value is valid
+                            resourceType = resourceTypesByShortName.Find(x => x.Resource.ToLower() == request.Resource.ToLower());
+                            if(resourceType == null)
+                            {
+                                valid = false;
+                                response.Message = "Resource value is invalid.";
+                                response.Success = false;
+                                return response;
+                            }
+                        }
+                        else
+                        {
+                            valid = false;
+                            response.Message = "Your configuration contains multiple resource types for the provided short name. You must supply the Resource value for the resource type in your request.(Example: resource: ApiManagement/service)";
+                            response.Success = false;
+                            return response;
+                        }
+                    }
+                    else
+                    {
+                        // Set the resource type ot the first value
+                        resourceType = resourceTypesByShortName[0];
+                    }
+                }
+                
 
                 // Get the current delimeter
                 serviceresponse = await ResourceDelimiterService.GetItem();
