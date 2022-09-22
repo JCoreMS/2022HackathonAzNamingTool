@@ -27,7 +27,7 @@ The Naming Tool was developed using a naming pattern based on [Microsoft's best 
 ## Azure Academy Video
 [Dean Cefola](https://github.com/DeanCefola) with [Azure Academy](https://www.youtube.com/c/AzureAcademy) made a great overview vidio. Click the image below to view the video on installing and configuring the tool as a container.
 
-[![Azure Academy Overview Video](./wwwroot/Screenshots/AzureAcademyVideo.png)](https://www.youtube.com/embed/Ztmxx_KhZdE)
+[![Azure Academy Overview Video](./wwwroot/Screenshots/AzureAcademyVideo.png)](https://youtu.be/Ztmxx_KhZdE)
 
 
 ## Project Structure
