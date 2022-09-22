@@ -18,12 +18,13 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.Success = false;
                 serviceResponse.ResponseObject = ex;
             }
             return serviceResponse;
         }
+
         public static async Task<ServiceResponse> GetItem(int id)
         {
             try
@@ -36,12 +37,13 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.Success = false;
                 serviceResponse.ResponseObject = ex;
             }
             return serviceResponse;
         }
+
         public static async Task<ServiceResponse> PostItem(ResourceLocation item)
         {
             try
@@ -100,7 +102,7 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.ResponseObject = ex;
                 serviceResponse.Success = false;
             }
@@ -124,7 +126,7 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.ResponseObject = ex;
                 serviceResponse.Success = false;
             }
@@ -164,7 +166,7 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.ResponseObject = ex;
                 serviceResponse.Success = false;
             }

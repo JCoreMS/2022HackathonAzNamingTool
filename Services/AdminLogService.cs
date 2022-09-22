@@ -9,7 +9,6 @@ namespace AzureNamingTool.Services
     {
         private static ServiceResponse serviceResponse = new();
 
-        
         /// <summary>
         /// This function returns the Admin log. 
         /// </summary>
@@ -34,6 +33,37 @@ namespace AzureNamingTool.Services
         }
 
         /// <summary>
+        /// This function logs the Admin message.
+        /// </summary>
+        public static async Task<ServiceResponse> PostItem(AdminLogMessage adminlogMessage)
+        {
+            ServiceResponse serviceReponse = new();
+            try
+            {
+                // Log the created name
+                var items = await GeneralHelper.GetList<AdminLogMessage>();       
+                if (items != null)
+                {
+                    if (items.Count > 0)
+                    {
+                        adminlogMessage.Id = items.Max(x => x.Id) + 1;
+                    }
+                }
+
+                items.Add(adminlogMessage);
+                // Write items to file
+                await GeneralHelper.WriteList<AdminLogMessage>(items);
+                serviceReponse.Success = true;
+            }
+            catch (Exception)
+            {
+                // No exception is logged due to this function being the function that would complete the action.
+                serviceReponse.Success = false;
+            }
+            return serviceReponse;
+        }
+
+        /// <summary>
         /// This function clears the Admin log. 
         /// </summary>
         /// <returns>void</returns>
@@ -48,48 +78,8 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                await AdminLogService.PostItem(new AdminLogMessage { Title = "Error", Message = ex.Message });
+                await AdminLogService.PostItem(new AdminLogMessage { Title = "ERROR", Message = ex.Message });
                 serviceResponse.Success = false;
-            }
-            return serviceReponse;
-        }
-
-        /// <summary>
-        /// This function logs the Admin message.
-        /// </summary>
-        public static async Task<ServiceResponse> PostItem(AdminLogMessage log)
-        {
-            ServiceResponse serviceReponse = new();
-            try
-            {
-                AdminLogMessage adminlogMessage = new();
-                {
-                    adminlogMessage.Id = 1;
-                    adminlogMessage.CreatedOn = DateTime.Now;
-                    adminlogMessage.Title = log.Title;
-                    adminlogMessage.Message = log.Message;
-                };
-
-                // Log the created name
-                var lstAdminLogMessages = new List<AdminLogMessage>();
-
-                serviceResponse = await GeneratedNamesService.GetItems();
-                lstAdminLogMessages = (List<AdminLogMessage>)serviceReponse.ResponseObject;
-
-                if (lstAdminLogMessages.Count > 0)
-                {
-                    adminlogMessage.Id = lstAdminLogMessages.Max(x => x.Id) + 1;
-                }
-
-                lstAdminLogMessages.Add(adminlogMessage);
-                // Write items to file
-                await GeneralHelper.WriteList<AdminLogMessage>(lstAdminLogMessages);
-                serviceReponse.Success = true;
-            }
-            catch (Exception)
-            {
-                // No exception is logged due to this function being the function that would complete the action.
-                serviceReponse.Success = false;
             }
             return serviceReponse;
         }
@@ -116,7 +106,7 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.ResponseObject = ex;
                 serviceResponse.Success = false;
             }

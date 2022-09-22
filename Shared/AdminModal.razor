@@ -104,10 +104,10 @@
                         </h5>
                         <div class="collapse card card-body @theme.ThemeStyle" id="clearcache">
                             <p>
-                                Clear the tool cache.
+                                The tool uses caching for data to improve performance. Click <strong>Clear</strong> to clear all cached data.
                             </p>
                             <div class="form-group">
-                                <button type="button" class="btn btn-success" @onclick="@(e => AdminFormAction("clearcache"))" title="Clear Cache">Clear Cache</button>
+                                <button type="button" class="btn btn-success" @onclick="@(e => AdminFormAction("clearcache"))" title="Clear Cache">Clear</button>
                             </div>
                         </div>
                     </div>
@@ -298,11 +298,9 @@
             {
                 case MessageTypesEnum.INFORMATION:
                     toastService.ShowInfo(message.Message, "INFORMATION");
-                    LogHelper.LogAdminMessage(message.Type.ToString(), message.Message);
                     break;
                 case MessageTypesEnum.SUCCESS:
                     toastService.ShowSuccess(message.Message, "SUCCESS");
-                    LogHelper.LogAdminMessage(message.Type.ToString(), message.Message);
                     break;
                 case MessageTypesEnum.WARNING:
                     toastService.ShowWarning(message.Message, "WARNING");
@@ -311,6 +309,7 @@
                     toastService.ShowError(message.Message, "ERROR");
                     break;
             }
+            AdminLogService.PostItem(new AdminLogMessage() { Title = message.Type.ToString(), Message = message.Message });
         }
 
         if (redirect)

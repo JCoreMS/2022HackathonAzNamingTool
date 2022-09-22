@@ -39,7 +39,7 @@ namespace AzureNamingTool.Helpers
             }
             catch(Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return servicesData;
             }
         }

@@ -34,7 +34,7 @@ namespace AzureNamingTool.Services
         ///  This function logs the generated name. 
         /// </summary>
         /// <param name="lstGeneratedName">GeneratedName - Generated name and components.</param>
-        public static async Task<ServiceResponse> PostItem(GeneratedName lstGeneratedName)
+        public static async Task<ServiceResponse> PostItem(GeneratedName generatedName)
         {
             ServiceResponse serviceReponse = new();
             try
@@ -42,16 +42,19 @@ namespace AzureNamingTool.Services
                 /// Get the previously generated names
                 var items = await GeneralHelper.GetList<GeneratedName>();
 
-                if (items.Count > 0)
+                if (items != null)
                 {
-                    lstGeneratedName.Id = items.Max(x => x.Id) + 1;
-                }
-                else
-                {
-                    lstGeneratedName.Id = 1;
+                    if (items.Count > 0)
+                    {
+                        generatedName.Id = items.Max(x => x.Id) + 1;
+                    }
+                    else
+                    {
+                        generatedName.Id = 1;
+                    }
                 }
 
-                items.Add(lstGeneratedName);
+                items.Add(generatedName);
 
                 // Write items to file
                 await GeneralHelper.WriteList<GeneratedName>(items);
@@ -111,7 +114,7 @@ namespace AzureNamingTool.Services
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 serviceResponse.ResponseObject = ex;
                 serviceResponse.Success = false;
             }
