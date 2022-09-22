@@ -14,6 +14,9 @@ using System.Security.AccessControl;
 using System.Runtime.Caching;
 using MemoryCache = System.Runtime.Caching.MemoryCache;
 using System.Net.Http.Json;
+using AzureNamingTool.Services;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 
 namespace AzureNamingTool.Helpers
 {
@@ -39,7 +42,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
             return value;
         }
@@ -56,7 +59,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
         }
 
@@ -69,7 +72,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return null;
             }
         }
@@ -120,7 +123,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 throw;
             }
         }
@@ -161,11 +164,11 @@ namespace AzureNamingTool.Helpers
                     case nameof(CustomComponent):
                         await FileSystemHelper.WriteConfiguation(items, "customcomponents.json");
                         break;
-                    case nameof(GeneratedName):
-                        await FileSystemHelper.WriteConfiguation(items, "generatednames.json");
-                        break;
                     case nameof(AdminLogMessage):
                         await FileSystemHelper.WriteConfiguation(items, "adminlogmessages.json");
+                        break;
+                    case nameof(GeneratedName):
+                        await FileSystemHelper.WriteConfiguation(items, "generatednames.json");
                         break;
                     default:
                         break;
@@ -184,17 +187,17 @@ namespace AzureNamingTool.Helpers
                     nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
                     nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
                     nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
-                    nameof(GeneratedName) => await FileSystemHelper.ReadFile("generatednames.json"),
                     nameof(AdminLogMessage) => await FileSystemHelper.ReadFile("adminlogmessages.json"),
+                    nameof(GeneratedName) => await FileSystemHelper.ReadFile("generatednames.json"),
                     _ => "[]",
                 };
-                
+
                 // Update the cache with the latest data
-                SetCacheObject(typeof(T).Name, data);                
+                SetCacheObject(typeof(T).Name, data);
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 throw;
             }
         }
@@ -233,6 +236,7 @@ namespace AzureNamingTool.Helpers
                 aes.KeySize = 256;
                 aes.Key = Encoding.UTF8.GetBytes(keyString);
                 aes.IV = iv;
+                aes.Padding = PaddingMode.PKCS7;
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
                 using MemoryStream memoryStream = new();
                 using CryptoStream cryptoStream = new((Stream)memoryStream, encryptor, CryptoStreamMode.Write);
@@ -253,6 +257,7 @@ namespace AzureNamingTool.Helpers
             aes.KeySize = 256;
             aes.Key = Encoding.UTF8.GetBytes(keyString);
             aes.IV = iv;
+            aes.Padding = PaddingMode.PKCS7;
             ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
             using MemoryStream memoryStream = new(buffer);
             using CryptoStream cryptoStream = new((Stream)memoryStream, decryptor, CryptoStreamMode.Read);
@@ -265,8 +270,8 @@ namespace AzureNamingTool.Helpers
             try
             {
                 // Get all the files in teh repository folder
-                DirectoryInfo dirRepository = new("repository");
-                foreach (FileInfo file in dirRepository.GetFiles())
+                DirectoryInfo repositoryDir = new("repository");
+                foreach (FileInfo file in repositoryDir.GetFiles())
                 {
                     // Check if the file exists in the settings folder
                     if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + file.Name)))
@@ -275,10 +280,18 @@ namespace AzureNamingTool.Helpers
                         file.CopyTo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + file.Name));
                     }
                 }
+
+                // Migrate old data to new files, if needed
+                // Check if the admin log file exists in the settings folder and the adminmessages does not
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlog.json")) && !File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlogmessages.json")))
+                {
+                    // Migrate the data
+                    FileSystemHelper.MigrateDataToFile("adminlog.json", "adminlogmessages.json", true);                    
+                }
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
         }
 
@@ -329,7 +342,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
         }
 
@@ -560,7 +573,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return new Tuple<bool, string, StringBuilder>(false, name, new StringBuilder("There was a problem validating the name."));
             }
         }
@@ -575,7 +588,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 data = "";
             }
             return data;
@@ -606,7 +619,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return null;
             }
         }
@@ -615,8 +628,8 @@ namespace AzureNamingTool.Helpers
         public static object GetCacheObject(string cachekey)
         {
             try
-            {                
-                ObjectCache memoryCache = MemoryCache.Default;                
+            {
+                ObjectCache memoryCache = MemoryCache.Default;
                 var encodedCache = memoryCache.Get(cachekey);
                 if (encodedCache == null)
                 {
@@ -629,7 +642,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return null;
             }
         }
@@ -649,7 +662,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
         }
 
@@ -662,7 +675,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
         }
 

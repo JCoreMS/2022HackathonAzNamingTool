@@ -1674,21 +1674,6 @@
 
             dataLoaded = true;
 
-            // V2.2.1
-            if (admin)
-            {
-                // Check if the resource types contain duplicates
-                // Get the existing Resource Type items
-                ServiceResponse serviceResponse;
-                serviceResponse = await ResourceTypeService.GetItems();
-                List<ResourceType> types = (List<ResourceType>)serviceResponse.ResponseObject;
-                var dupes = types.GroupBy(x => x.ShortName).Any(g => g.Count() > 1);
-                if (dupes)
-                {
-                    ShowInformationModal("bg-navcolor", "ATTENTION", "Your resource types configuration contains duplicate short names. This can cause an issue when generating names using the API.<br /><br />It is recommended that you refresh your resource types to the latest configuration.<br /><br />To refresh:<ul><li>Expand the Resource Types section</li><li>Expand the Configuration section</li><li>Select the Refresh option, with the 'Refresh short names?' option selected</li></ul><br />");
-                }
-            }
-
             StateHasChanged();
         }
     }
@@ -2900,7 +2885,7 @@
         }
         catch (Exception ex)
         {
-            LogHelper.LogAdminMessage("ERROR", ex.Message);
+            AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             message.Type = MessageTypesEnum.ERROR;
             message.Message = "There was a problem with the request.";
         }
@@ -2912,20 +2897,18 @@
             {
                 case MessageTypesEnum.INFORMATION:
                     toastService.ShowInfo(message.Message, "INFORMATION");
-                    LogHelper.LogAdminMessage(message.Type.ToString(), message.Message);
                     break;
                 case MessageTypesEnum.SUCCESS:
                     toastService.ShowSuccess(message.Message, "SUCCESS");
-                    LogHelper.LogAdminMessage(message.Type.ToString(), message.Message);
                     break;
                 case MessageTypesEnum.WARNING:
                     toastService.ShowWarning(message.Message, "WARNING");
                     break;
                 case MessageTypesEnum.ERROR:
                     toastService.ShowError(message.Message, "ERROR");
-                    LogHelper.LogAdminMessage("ERROR", message.Message + message.MessageDetails);
                     break;
             }
+            AdminLogService.PostItem(new AdminLogMessage() { Title = message.Type.ToString(), Message = message.Message });
         }
     }
 
