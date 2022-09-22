@@ -18,9 +18,10 @@
 - Fixed grammar/formatting issues in GitHub documentation
 - Updated resourcetypes.json with latest Azure resources
 - Added information/update prompt to Configuration page if resaourcetypes.json contains types with duplicate short names
-- Added option to display Latest News feed
+- Added option to enable/disbale Latest News feed on Home page
 - Added option to exlcude Admin configuration from Global Backup functionality
 - Updated API to handle resource types with duplicate names
+- Added Admin Log and Generated Names log data to Global Configuration backup/restore functionality
 
 ***
 
