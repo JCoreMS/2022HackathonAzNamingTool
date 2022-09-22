@@ -10,7 +10,8 @@
 - Added Search functionality to Generated Names Log
 - Added caching throughout application for performance/optimization
 - Added functionality to check for latest version. Admins will be prompted if the installed version is out of date.
-- Added FAQ page
+- Added FAQ page to GitHub repo
+- Added Contributors page to GitHub repo
 
 ### Bug fixes
 - Fixed grammar/formatting issues in GitHub documentation
@@ -18,9 +19,7 @@
 - Added information/update prompt to Configuration page if resaourcetypes.json contains types with duplicate short names
 - Added option to display Latest News feed
 - Added option to exlcude Admin configuration from Global Backup functionality
-
-### Notes
-- This update includes resource type configuration changes. It is recommended that users refresh their Resource Type configuration using the built-in tool on the Configuration page.
+- Updated API to handle resource types with duplicate names
 
 ***
 
