@@ -19,7 +19,7 @@ namespace AzureNamingTool.Services
             {
                 // Get list of items
                 var items = await GeneralHelper.GetList<AdminLogMessage>();
-                serviceResponse.ResponseObject = items;
+                serviceResponse.ResponseObject = items.OrderByDescending(x => x.CreatedOn).ToList();
                 serviceResponse.Success = true;
             }
             catch (Exception ex)
@@ -36,19 +36,21 @@ namespace AzureNamingTool.Services
         /// This function clears the Admin log. 
         /// </summary>
         /// <returns>void</returns>
-        public static async Task DeleteAllItems()
+        public static async Task<ServiceResponse> DeleteAllItems()
         {
+            ServiceResponse serviceReponse = new();
             try
             {
-                await FileSystemHelper.WriteFile("adminlog.json", "[]");
+                List<AdminLogMessage> lstAdminLogMessages = new List<AdminLogMessage>();
+                await GeneralHelper.WriteList<AdminLogMessage>(lstAdminLogMessages);
+                serviceReponse.Success = true;
             }
             catch (Exception ex)
             {
                 await AdminLogService.PostItem(new AdminLogMessage { Title = "Error", Message = ex.Message });
                 serviceResponse.Success = false;
             }
-
-            serviceResponse.Success = true;
+            return serviceReponse;
         }
 
         /// <summary>

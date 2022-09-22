@@ -179,6 +179,7 @@
             await AdminLogService.DeleteAllItems();
             toastService.ShowSuccess("Admin Log purged!", "SUCCESS");
             LogHelper.LogAdminMessage("ADMIN LOG", "Admin Log log purged.");
+            GeneralHelper.InvalidateCacheObject("AdminLogMessage");
             serviceResponse = await AdminLogService.GetItems();
             lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject;
             dataLoaded = true;

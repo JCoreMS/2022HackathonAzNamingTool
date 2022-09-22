@@ -19,7 +19,7 @@ namespace AzureNamingTool.Services
             {
                 // Get list of items
                 var items = await GeneralHelper.GetList<GeneratedName>();
-                serviceResponse.ResponseObject = items;
+                serviceResponse.ResponseObject = items.OrderByDescending(x => x.CreatedOn).ToList();
                 serviceResponse.Success = true;
             }
             catch (Exception ex)
@@ -27,10 +27,7 @@ namespace AzureNamingTool.Services
                 await AdminLogService.PostItem(new AdminLogMessage{ Title = "ERROR", Message = ex.Message });
                 serviceResponse.Success = false;
             }
-            serviceResponse.ResponseObject = lstGeneratedNames;
-            serviceResponse.Success = true;
             return serviceResponse;
-
         }
 
         /// <summary>
@@ -80,15 +77,14 @@ namespace AzureNamingTool.Services
             ServiceResponse serviceReponse = new();
             try
             {
-                await FileSystemHelper.WriteFile("generatednames.json", "[]");
-                // Write the log to cache
-                GeneralHelper.InvalidateCacheObject("generatednames.json");
+                List<GeneratedName> items = new List<GeneratedName>();
+                await GeneralHelper.WriteList<GeneratedName>(items);
                 serviceReponse.Success = true;
             }
             catch (Exception ex)
             {
-                await AdminLogService.PostItem(new AdminLogMessage { Title = "ERROR", Message = ex.Message });
-                serviceReponse.Success = false;
+                await AdminLogService.PostItem(new AdminLogMessage { Title = "Error", Message = ex.Message });
+                serviceResponse.Success = false;
             }
             return serviceReponse;
         }

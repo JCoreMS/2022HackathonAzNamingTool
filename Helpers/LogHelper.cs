@@ -42,6 +42,7 @@ namespace AzureNamingTool.Helpers
                 lstAdminLogMessages.Add(adminmessage);
                 var jsonAdminLogMessages = JsonSerializer.Serialize(lstAdminLogMessages);
                 await FileSystemHelper.WriteFile("adminlog.json", jsonAdminLogMessages);
+                GeneralHelper.InvalidateCacheObject("AdminLogMessage");
             }
             catch (Exception)
             {
