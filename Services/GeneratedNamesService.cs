@@ -92,5 +92,34 @@ namespace AzureNamingTool.Services
             }
             return serviceReponse;
         }
+
+        public static async Task<ServiceResponse> PostConfig(List<GeneratedName> items)
+        {
+            try
+            {
+                // Get list of items
+                var newitems = new List<GeneratedName>();
+                int i = 1;
+
+                // Determine new item id
+                foreach (GeneratedName item in items)
+                {
+                    item.Id = i;
+                    newitems.Add(item);
+                    i += 1;
+                }
+
+                // Write items to file
+                await GeneralHelper.WriteList<GeneratedName>(newitems);
+                serviceResponse.Success = true;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                serviceResponse.ResponseObject = ex;
+                serviceResponse.Success = false;
+            }
+            return serviceResponse;
+        }
     }
 }
