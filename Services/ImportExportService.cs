@@ -56,6 +56,14 @@ namespace AzureNamingTool.Services
                 serviceResponse = await CustomComponentService.GetItems();
                 configdata.CustomComponents = serviceResponse.ResponseObject;
 
+                //GeneratedNames
+                serviceResponse = await GeneratedNamesService.GetItems();
+                configdata.GeneratedNames = serviceResponse.ResponseObject;
+
+                //AdminLogs
+                serviceResponse = await AdminLogService.GetItems();
+                configdata.AdminLogs = serviceResponse.ResponseObject;
+
                 // Get the security settings
                 if (includeadmin)
                 {
@@ -92,7 +100,9 @@ namespace AzureNamingTool.Services
                 await ResourceTypeService.PostConfig(configdata.ResourceTypes);
                 await ResourceUnitDeptService.PostConfig(configdata.ResourceUnitDepts);
                 await CustomComponentService.PostConfig(configdata.CustomComponents);
-
+                await GeneratedNamesService.PostConfig(configdata.GeneratedNames);
+                await AdminLogService.PostConfig(configdata.AdminLogs);
+                
                 // Set the security settings
                 var config = GeneralHelper.GetConfigurationData();
 

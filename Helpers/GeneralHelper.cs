@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Security.AccessControl;
 using System.Runtime.Caching;
 using MemoryCache = System.Runtime.Caching.MemoryCache;
+using System.Net.Http.Json;
 
 namespace AzureNamingTool.Helpers
 {
@@ -93,7 +94,7 @@ namespace AzureNamingTool.Helpers
                         nameof(ResourceFunction) => await FileSystemHelper.ReadFile("resourcefunctions.json"),
                         nameof(ResourceDelimiter) => await FileSystemHelper.ReadFile("resourcedelimiters.json"),
                         nameof(CustomComponent) => await FileSystemHelper.ReadFile("customcomponents.json"),
-                        nameof(AdminLogMessage) => await FileSystemHelper.ReadFile("adminlog.json"),
+                        nameof(AdminLogMessage) => await FileSystemHelper.ReadFile("adminlogmessages.json"),
                         nameof(GeneratedName) => await FileSystemHelper.ReadFile("generatednames.json"),
                         _ => "[]",
                     };
@@ -159,12 +160,6 @@ namespace AzureNamingTool.Helpers
                         break;
                     case nameof(CustomComponent):
                         await FileSystemHelper.WriteConfiguation(items, "customcomponents.json");
-                        break;
-                    case nameof(AdminLogMessage):
-                        await FileSystemHelper.WriteConfiguation(items, "adminlog.json");
-                        break;
-                    case nameof(GeneratedName):
-                        await FileSystemHelper.WriteConfiguation(items, "generatednames.json");
                         break;
                     default:
                         break;
