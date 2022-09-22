@@ -10,8 +10,9 @@
 - Added Search functionality to Generated Names Log
 - Added caching throughout application for performance/optimization
 - Added functionality to check for latest version. Admins will be prompted if the installed version is out of date.
-- Added FAQ page to GitHub repo
-- Added Contributors page to GitHub repo
+- Added FAQ.md to GitHub
+- Added CONTRIBUTORS.ms to GitHub
+- Added instructions for deploying as an Azure App Service to INSTALLATION.md in GitHub
 
 ### Bug fixes
 - Fixed grammar/formatting issues in GitHub documentation
