@@ -25,7 +25,7 @@ Stay up to date on new features and announcements here:
 The Naming Tool was developed using a naming pattern based on [Microsoft's best practices](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging). Once an administrator has defined the organizational components, users can use the tool to generate a name for the desired Azure resource.
 
 ## Azure Academy Video
-[Dean Cefola](https://github.com/DeanCefola) with [Azure Academy](https://www.youtube.com/c/AzureAcademy) made a great overview vidio. Click the image below to view the video on installing and configuring the tool as a container.
+[Dean Cefola](https://github.com/DeanCefola) with [Azure Academy](https://www.youtube.com/c/AzureAcademy) made a great overview video. Click the image below to view the video on installing and configuring the tool as a container.
 
 [![Azure Academy Overview Video](./wwwroot/Screenshots/AzureAcademyVideo.png)](https://youtu.be/Ztmxx_KhZdE)
 
