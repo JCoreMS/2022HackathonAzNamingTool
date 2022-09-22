@@ -189,7 +189,8 @@
         {
             await GeneratedNamesService.DeleteAllItems();
             toastService.ShowSuccess("Generated Log purged!", "SUCCESS");
-            LogHelper.LogAdminMessage("GENERATED NAMES LOG", "Generated Names log purged.");
+            AdminLogService.PostItem(new AdminLogMessage() { Title = "INFORMATION", Message = "Generated Names log purged." });
+            GeneralHelper.InvalidateCacheObject("GeneratedName");
             serviceResponse = await GeneratedNamesService.GetItems();
             lstNameRequests = (List<GeneratedName>)serviceResponse.ResponseObject;
             StateHasChanged();

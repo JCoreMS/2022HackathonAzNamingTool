@@ -1,7 +1,10 @@
-﻿using System;
+﻿using AzureNamingTool.Models;
+using AzureNamingTool.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -62,7 +65,7 @@ namespace AzureNamingTool.Helpers
             }
             catch (Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
                 return ex;
             }
         }
@@ -87,9 +90,24 @@ namespace AzureNamingTool.Helpers
             }
             catch(Exception ex)
             {
-                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
             }
             return result;
+        }
+
+        public static async Task MigrateDataToFile(string sourcefileName, string destinationfilename, bool delete)
+        {
+            // Get the source data
+            string data = await ReadFile(sourcefileName);
+
+            // Write the destination data
+            await WriteFile(destinationfilename, data);
+
+            // Check if the source file should be removed
+            if(delete)
+            {
+                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + sourcefileName));
+            }
         }
     }
 }

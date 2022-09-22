@@ -32,6 +32,7 @@
     <Content Remove="settings\resourcelocations.json" />
     <Content Remove="settings\generatednames.json" />
 	<Content Remove="settings\adminlog.json" />
+	<Content Remove="settings\adminlogmessages.json" />
     <Content Remove="settings\resourceorgs.json" />
     <Content Remove="settings\resourceprojappsvcs.json" />
     <Content Remove="settings\resourcetypes.json" />
