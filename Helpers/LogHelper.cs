@@ -28,8 +28,6 @@ namespace AzureNamingTool.Helpers
                 // Log the created name
                 var lstAdminLogMessages = new List<AdminLogMessage>();
 
-                //temp until removed
-                //lstAdminLogMessages = await GetAdminLog();
                 ServiceResponse serviceResponse = new();
                 serviceResponse = await AdminLogService.GetItems();
                 lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject;

@@ -1,5 +1,6 @@
 ﻿using AzureNamingTool.Helpers;
 using AzureNamingTool.Models;
+using AzureNamingTool.Pages;
 using System.Text.Json;
 
 namespace AzureNamingTool.Services
@@ -91,7 +92,33 @@ namespace AzureNamingTool.Services
             return serviceReponse;
         }
 
+        public static async Task<ServiceResponse> PostConfig(List<AdminLogMessage> items)
+        {
+            try
+            {
+                // Get list of items
+                var newitems = new List<AdminLogMessage>();
+                int i = 1;
 
+                // Determine new item id
+                foreach (AdminLogMessage item in items)
+                {
+                    item.Id = i;
+                    newitems.Add(item);
+                    i += 1;
+                }
 
+                // Write items to file
+                await GeneralHelper.WriteList<AdminLogMessage>(newitems);
+                serviceResponse.Success = true;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LogAdminMessage("ERROR", ex.Message);
+                serviceResponse.ResponseObject = ex;
+                serviceResponse.Success = false;
+            }
+            return serviceResponse;
+        }
     }
 }
