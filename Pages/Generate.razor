@@ -176,7 +176,7 @@
                                                 <div class="card card-body @theme.ThemeStyle">
                                                     <InputSelect title="@resourceComponent.DisplayName" class="@GetControlStyle()" ValueExpression="@(()=>selectedResourceFunction)"
                                          Value="@selectedResourceFunction"
-                                         ValueChanged="@((string value) => OnComponentChanged("rvmr",value))">
+                                         ValueChanged="@((string value) => OnComponentChanged("rf",value))">
                                                         <option value="">Select a Function</option>
                                                         @foreach (var item in @servicesData.ResourceFunctions)
                                                         {
@@ -455,7 +455,7 @@
     private void OnCategoryChanged(string value)
     {
         selectedResourceTypeCategory = value;
-        selectedResourceType = null;
+        selectedResourceType = "";
         componentsVisible = "collapse show";
     }
 
@@ -534,7 +534,7 @@
             case "rud":
                 selectedResourceUnitDept = value;
                 break;
-            case "rvmr":
+            case "rf":
                 selectedResourceFunction = value;
                 break;
             case "cc":
