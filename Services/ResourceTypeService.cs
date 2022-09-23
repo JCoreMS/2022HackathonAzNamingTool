@@ -210,7 +210,8 @@ namespace AzureNamingTool.Services
 
         public static List<ResourceType> GetFilteredResourceTypes(List<ResourceType> types, string filter)
         {
-            List<ResourceType> filteredtypes = types.Where(x => x.Resource.StartsWith(filter) && x.Property.ToLower() != "display name").ToList();
+            // Filter out resource types that should have name generation
+            List<ResourceType> filteredtypes = types.Where(x => x.Resource.StartsWith(filter) && x.Property.ToLower() != "display name" && x.ShortName != "").ToList();
             return filteredtypes;
         }
 
