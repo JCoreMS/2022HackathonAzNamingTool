@@ -12,13 +12,20 @@ namespace AzureNamingTool.Services
     {
         private static ServiceResponse serviceResponse = new();
 
-        public static async Task<ServiceResponse> GetItems()
+        public static async Task<ServiceResponse> GetItems(bool admin = true)
         {
             try
             {
                 // Get list of items
                 var items = await GeneralHelper.GetList<ResourceType>();
-                serviceResponse.ResponseObject = items.OrderBy(x => x.Resource).ToList(); ;
+                if (!admin)
+                {
+                    serviceResponse.ResponseObject = items.Where(x => x.Enabled == true).OrderBy(x => x.Resource).ToList();
+                }
+                else
+                {
+                    serviceResponse.ResponseObject = items.OrderBy(x => x.Resource).ToList();
+                }
                 serviceResponse.Success = true;
             }
             catch (Exception ex)
@@ -156,18 +163,6 @@ namespace AzureNamingTool.Services
                 {
                     // Force lowercase on the shortname
                     item.ShortName = item.ShortName.ToLower();
-
-                    // V2.2.1
-                    // Confirm the short name value is unique
-                    var duplicateitems = items.FindAll(x => x.ShortName.ToLower() == item.ShortName && x.Id != item.Id);
-                    if (duplicateitems.Count > 0)
-                    {
-                        serviceResponse.ResponseObject = "Please see the <a href=\"/adminlog\">AdminLogMessage Log</a> for additional details.";
-                        serviceResponse.ResponseMessage = "The specified short name value (" + item.ShortName + ") for " + item.Resource + " is already in use by " + duplicateitems[0].Resource + ". Please enter a unique value.";
-                        serviceResponse.Success = false;
-                        return serviceResponse;
-                    }
-
                     item.Id = i;
                     newitems.Add(item);
                     i += 1;
@@ -245,10 +240,11 @@ namespace AzureNamingTool.Services
                         int i = types.FindIndex(x => x.Resource == newtype.Resource);
                         if (i > -1)
                         {
+                            // Update the Resource Type Information
                             ResourceType oldtype = types[i];
-                            // Update the Resaource Type Information
                             newtype.Exclude = oldtype.Exclude;
                             newtype.Optional = oldtype.Optional;
+                            newtype.Enabled= oldtype.Enabled;
                             if (!shortNameReset)
                             {
                                 newtype.ShortName = oldtype.ShortName;
@@ -267,9 +263,9 @@ namespace AzureNamingTool.Services
 
                     // Update the settings file
                     serviceResponse = await PostConfig(types);
-
+                    
                     // Update the repository file
-                    File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "repository/resourcetypes.json"), refreshdata);
+                    await FileSystemHelper.WriteFile("resourcetypes.json", refreshdata, "repository/");
                 }
                 else
                 {

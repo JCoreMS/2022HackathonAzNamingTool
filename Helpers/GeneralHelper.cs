@@ -286,7 +286,7 @@ namespace AzureNamingTool.Helpers
                 if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlog.json")) && !File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlogmessages.json")))
                 {
                     // Migrate the data
-                    FileSystemHelper.MigrateDataToFile("adminlog.json", "adminlogmessages.json", true);                    
+                    FileSystemHelper.MigrateDataToFile("settings/adminlog.json", "settings/adminlogmessages.json", true);                    
                 }
             }
             catch (Exception ex)
@@ -346,7 +346,7 @@ namespace AzureNamingTool.Helpers
             }
         }
 
-        public static void UpdateSettings(Config config)
+        public static async void UpdateSettings(Config config)
         {
             var jsonWriteOptions = new JsonSerializerOptions()
             {
@@ -355,9 +355,9 @@ namespace AzureNamingTool.Helpers
             jsonWriteOptions.Converters.Add(new JsonStringEnumConverter());
 
             var newJson = JsonSerializer.Serialize(config, jsonWriteOptions);
-
+            
             var appSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/appsettings.json");
-            File.WriteAllText(appSettingsPath, newJson);
+            await FileSystemHelper.WriteFile("appsettings.json", newJson);
         }
 
         public static void ResetState(StateContainer state)
@@ -679,5 +679,16 @@ namespace AzureNamingTool.Helpers
             }
         }
 
+        public static string SetTextEnabledClass(bool enabled)
+        {
+            if (enabled)
+            {
+                return "";
+            }
+            else
+            {
+                return "disabled-text";
+            }
+        }
     }
 }

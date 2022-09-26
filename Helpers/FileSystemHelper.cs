@@ -15,31 +15,31 @@ namespace AzureNamingTool.Helpers
 {
     public class FileSystemHelper
     {
-        public static async Task<string> ReadFile(string fileName)
+        public static async Task<string> ReadFile(string fileName, string folderName = "settings/")
         {
-            await CheckFile(fileName);
-            string data = await File.ReadAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + fileName));
+            await CheckFile(folderName + fileName);
+            string data = await File.ReadAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folderName + fileName));
             return data;
         }
 
-        public static async Task WriteFile(string fileName, string content)
+        public static async Task WriteFile(string fileName, string content, string folderName = "settings/")
         {
-            await CheckFile(fileName);
-            File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + fileName), content);
+            await CheckFile(folderName + fileName);
+            File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folderName + fileName), content);
         }
 
         public static async Task CheckFile(string fileName)
         {
-            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + fileName)))
+            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)))
             {
-                var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + fileName));
+                var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName));
                 file.Close();
 
                 for (int numTries = 0; numTries < 10; numTries++)
                 {
                     try
                     {
-                        await File.WriteAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + fileName), "[]");
+                        await File.WriteAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName), "[]");
                         return;
                     }
                     catch (IOException)

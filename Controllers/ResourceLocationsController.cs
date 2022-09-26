@@ -25,11 +25,11 @@ namespace AzureNamingTool.Controllers
         /// </summary>
         /// <returns>json - Current locations data</returns>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(bool admin = false)
         {
             try
             {
-                serviceResponse = await ResourceLocationService.GetItems();
+                serviceResponse = await ResourceLocationService.GetItems(admin);
                 if (serviceResponse.Success)
                 {
                     return Ok(serviceResponse.ResponseObject);
