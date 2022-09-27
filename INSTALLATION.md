@@ -119,7 +119,10 @@ This process will allow you to deploy the Azure Naming Tool as a .NET applicatio
 > The GitHub Action will not successfully deploy until the secrets are created.
 > You must create an Azure Web App and configure the GitHub Action secrets to deploy to your Azure Web App.
 
-**Create an Azure Web App** (if needed)
+**Create an Azure Web App** (if needed)  
+For an automated deployment of a Web App, utilize the button below and fill in the required information. Then proceed to step 4.    
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FCloudAdoptionFramework%2Fmain%2Fready%2FAzNamingTool%2FDeployments%2FAppService-WebApp%2Fsolution.json)
+[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FCloudAdoptionFramework%2Fmain%2Fready%2FAzNamingTool%2FDeployments%2FAppService-WebApp%2Fsolution.json)
 1. Create a new Web App in the Azure portal.
 2. For the **Publish** option, select **Code**.
 3. For the **Runtime stack**, select **.NET 6**.
@@ -127,6 +130,12 @@ This process will allow you to deploy the Azure Naming Tool as a .NET applicatio
   ![Web App Basics](./wwwroot/Screenshots/WebAppInstallation1.png)
 
 4. Download the **Publish Profile** for use within the GitHub Action secret.
+
+```PowerShell
+Get-AzWebApp -Name <webappname> | Get-AzWebAppPublishingProfile -OutputFile <filename> | Out-Null
+```  
+
+**OR**
 
   ![Web App Details](./wwwroot/Screenshots/WebAppInstallation2.png)
 
