@@ -286,7 +286,7 @@ namespace AzureNamingTool.Helpers
                 if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlog.json")) && !File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/adminlogmessages.json")))
                 {
                     // Migrate the data
-                    FileSystemHelper.MigrateDataToFile("settings/adminlog.json", "settings/adminlogmessages.json", true);                    
+                    FileSystemHelper.MigrateDataToFile("adminlog.json", "settings/", "adminlogmessages.json", "settings/", true);                    
                 }
             }
             catch (Exception ex)

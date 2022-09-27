@@ -75,7 +75,7 @@ namespace AzureNamingTool.Helpers
             bool result = false;
             try
             {
-                // Get all the files in teh repository folder
+                // Get all the files in the repository folder
                 DirectoryInfo dirRepository = new("repository");
                 foreach (FileInfo file in dirRepository.GetFiles())
                 {
@@ -95,17 +95,18 @@ namespace AzureNamingTool.Helpers
             return result;
         }
 
-        public static async Task MigrateDataToFile(string sourcefileName, string destinationfilename, bool delete)
+        public static async Task MigrateDataToFile(string sourcefileName, string sourcefolderName, string destinationfilename, string destinationfolderName, bool delete)
         {
             // Get the source data
-            string data = await ReadFile(sourcefileName);
+            string data = await ReadFile(sourcefileName, sourcefolderName);
 
             // Write the destination data
-            await WriteFile(destinationfilename, data);
+            await WriteFile(destinationfilename, data, destinationfolderName);
 
-            // Check if the source file should be removed
+            // Check if the source file should be removed (In repository and settings folders)
             if(delete)
             {
+                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "repository/" + sourcefileName));
                 File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings/" + sourcefileName));
             }
         }

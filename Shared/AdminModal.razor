@@ -35,26 +35,6 @@
                     <p>
                         This form allows you to set the Admin password, API key, and configuration for the Azure Naming Tool.
                     </p>
-                    @*                    <div class="card mb-3">
-                <h5 class="card-header @theme.ThemeStyle">
-                Theme
-                </h5>
-                <div class="card card-body @theme.ThemeStyle">
-                <p>
-                Select a theme for the site.
-                </p>
-                <div class="form-group">
-                <label>
-                <input type="radio" name="apptheme" checked="@(apptheme == "bg-default text-black")" @onchange="() => OnThemeChanged(false)" /> Light
-                </label>
-                <label>
-                <input type="radio" name="apptheme" checked="@(apptheme == "bg-dark text-white")" @onchange="() => OnThemeChanged(true)" /> Dark
-                </label>
-                </div>
-
-                </div>
-                </div>*@
-
                     <div class="card mb-3">
                         <h5 class="card-header @theme.ThemeStyle">
                             <a class="text-decoration-none text-black" data-toggle="collapse" style="display:block;font-weight:bold;" href="#updatepassword" role="button" aria-expanded="false" aria-controls="updatepassword">
@@ -128,8 +108,6 @@
     </div>
 </div>
 
-
-
 @code {
 
     [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
@@ -149,13 +127,6 @@
 
     protected override async void OnInitialized()
     {
-        //admin = state.Admin;
-        //var result = await session.GetAsync<bool>("admin");
-        //admin = (bool)result.Value;
-        //if (admin)
-        //{
-        //    currentapikey = GeneralHelper.DecryptString(config.APIKey, config.SALTKey);
-        //}
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

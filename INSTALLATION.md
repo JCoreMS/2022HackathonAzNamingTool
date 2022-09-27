@@ -10,7 +10,7 @@
 
 * [Run as a Docker image](#run-as-a-docker-image) (Local development)
 
-* [Run as an Azure App Service](#run-as-an-azure-app-service) (.NET Application running in an Azure App Service, non-container)
+* [Run as an Azure Web App Using GitHub Action](#run-as-an-azure-web-app-using-github-action) (.NET Application running in an Azure App Service, non-container)
 
 * [Run as a Web App for Containers](#run-as-a-web-app-for-containers) (Single container running in an Azure App Service)
 
@@ -18,33 +18,37 @@
 
 * [Run as a Stand-Alone Site](#run-as-a-stand-alone-site) 
 
+***
 ## Choosing An Installation Option
 The Azure Naming Tool was designed to be deployed in nearly any environment. This includes as a stand-alone application, or as a container. Each deployment option offers pros/cons, depending on your environment and level of experience. Here is a break-down of the deployment options:
 
-* **Docker**
+* [**Run as a Docker image**](#run-as-a-docker-image)
   * Ideal for local deployments
   * Requires docker engine installed in environment
   * Requires storage volume mount
 
-* **Azure App Service**
+* [**Run as an Azure Web App Using GitHub Action**](#run-as-an-azure-web-app-using-github-action)
   * Ideal for fastest deployment
-  * Requires Azure App Service
-  * Can be integrated for continuous deployment from GitHub
+  * Requires Azure Web App
+  * Utilizes provided GitHub Action for deployment
+  * Requires GitHub secrets to be created (instructions in GitHub Action workflow file)
+  * Integrated for continuous deployment from GitHub
 
-* **Web App for Container**
+* [**Run as a Web App for Containers**](#run-as-a-web-app-for-containers)
   * Ideal for single container installations
   * Requires Azure App Service
   * Requires Azure Storage account / Azure Files Fileshare for persistent storage 
 
-* **Azure Container App**
+* [**Run as an Azure Container App**](#run-as-an-azure-container-app)
   * Ideal for multiple container installations (integration with other containers, services, etc.)
   * Requires Azure Container App
   * Requires Azure Storage account / Azure Files Fileshare for persistent storage 
 
-* **Stand-alone site**
+* [**Run as a Stand-Alone Site**](#run-as-a-stand-alone-site)
   * Ideal for legacy deployments
   * Requires web server deployment (IIS, Apache, etc.)
 
+***
 ## How To Install
 
 This project contains a .NET 6 application, with Docker support. To use, complete the following:
@@ -97,55 +101,55 @@ docker run -d -p 8081:80 --mount source=azurenamingtoolvol,target=/app/settings 
 > Substitute 8081 for the port you used in the docker run command
 
 ***
-### Run as an Azure App Service
+### Run as an Azure Web App Using GitHub Action
 
 (.NET application, non-container)
 
-This process will allow you to deploy the Azure Naming Tool as a .NET application in an Azure App Service. This is the fastest deployment option and allows you to deploy and utilize your installation in minutes. This process includes creating a fork of the repository, then creatin an Azure App Service with direct integration to your repo. This will create a GitHub Action to deploy your repository code on every commit. 
+This process will allow you to deploy the Azure Naming Tool as a .NET application as an Azure Web App. This is the fastest deployment option and allows you to deploy and utilize your installation in minutes. This process includes creating a fork of the repository, then creating an Azure Web App. The provided GitHub Action will deploy your repository code on every commit. 
 
+**Fork the Cloud Adoption Frameowrk Repository**
 1. Scroll up to the top, left corner of this page.
 2. Click on the **CloudAdoptionFramework** link to open the root of this repository.
 3. Click the **Fork** option in the top right menu.
 4. Select your desired **Owner** and **Repository name** and click **Create fork**.
-5. In the Azure Portal, create a new resource.
-6. Search for **Web App** and select **Create**.
+5. Click the green **<>Code** button and open the **.github/workflows/deploy-azure-naming-tool-to-azure-webapps-dotnet-core.yml** file.
+6. Review the instructions for creating the required GitHub secrets.
 
-   ![AppServiceInstall1](./wwwroot/Screenshots/AppServiceInstall1.png)
+> **NOTES:**
+> The GitHub Action will not successfull.y deploy until the secrets are created.
+> You must create an Azure Web App and configure the GitHub Action secrets to deploy to your Azure Web App.
 
-8. On the **Create** tab, select the following options:
+**Create an Azure Web App** (if needed)
+1. Create a new Web App in the Azure portal.
+2. For the **Publish** option, select **Code**.
+3. For the **Runtime stack**, select **.NET 6**.
 
-   ![AppServiceInstall2](./wwwroot/Screenshots/AppServiceInstall2.png)  
+  ![Web App Basics](./wwwroot/Screenshots/WebAppInstallation1.png)
 
-  - RuntimeStack: **.NET 6 (LTS)**
-  - Operating Systems: **Linux** (For lowest cost)
-9. Select desired options for all other settings and click **Next**.
-10. On the **Deployment** tab, select the following options:
+4. Download the **Publish Profile** for use within the GitHub Action secret.
 
-   ![AppServiceInstall3](./wwwroot/Screenshots/AppServiceInstall3.png)  
+  ![Web App Details](./wwwroot/Screenshots/WebAppInstallation2.png)
 
-  - Continuous deployment: **Enable**
-  - Authenticate to your GitHub account
-  - Organization: **Your desired organization**
-  - Repository: **Your desired repository**
-  - Branch: **Your desired branch** 
-11. Click **Review + create**.
-12. After the site is deployed, it is recommended that you enable Authentication on the app service. Choose your desired identity provider to ensure only authorized users can access your site.
+**Create GitHub Secrets**
+1. In your GitHub repository, click **Settings** in the top menu.
+2. Click **Secrets** in the left menu.
+3. Click **New repository secret**.
+4. Enter **AZURE_WEBAPP_PUBLISH_PROFILE** as the **Name**.
+5. Enter the **Publish Profile** data for your Azure Web App as the **Value**.
+6. Click **Add secret**.
+7. Click **New repository secret**.
+8. Enter **AZURE_WEBAPP_NAME** as the **Name**.
+9. Enter the name of your Azure Web App as the **Value**.
+10. Click **Add secret**.
 
-   ![AppServiceInstall4](./wwwroot/Screenshots/AppServiceInstall4.png)  
+  ![GitHub Secrets](./wwwroot/Screenshots/GitHubActionInstallation1.png)
 
-13. In your GitHub repo, select the **Actions** tab.
-14. Review the new GitHub Action workflow definition file.
-
-   ![AppServiceInstall5](./wwwroot/Screenshots/AppServiceInstall5.png)  
-
-15. On your **Settings** tab, review the new **Secret* value for your deployment.
-
-   ![AppServiceInstall6](./wwwroot/Screenshots/AppServiceInstall6.png)  
-
-16. Access the site using your Azure App Service URL
+11. In your GitHub repository, click **Actions** in the top menu.
+12. Click **Azure Naming Tool - Build and deploy to an Azure Web App** in the left menu.
+13. Access the site using your Azure App Service URL
 
 > **NOTE:**
-> It is recommended that you enable authentication on your Container App to prevent un-authorized access. [Authentication and authorization in Azure Container Apps](https://docs.microsoft.com/en-us/azure/container-apps/authentication)
+> It is recommended that you enable authentication on your Web App to prevent un-authorized access. [Configure your App Service or Azure Functions app to use Azure AD login](https://learn.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad)
 
 ***
 
