@@ -116,7 +116,7 @@ This process will allow you to deploy the Azure Naming Tool as a .NET applicatio
 6. Review the instructions for creating the required GitHub secrets.
 
 > **NOTES:**
-> The GitHub Action will not successfull.y deploy until the secrets are created.
+> The GitHub Action will not successfully deploy until the secrets are created.
 > You must create an Azure Web App and configure the GitHub Action secrets to deploy to your Azure Web App.
 
 **Create an Azure Web App** (if needed)
