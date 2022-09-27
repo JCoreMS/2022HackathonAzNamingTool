@@ -107,7 +107,7 @@ docker run -d -p 8081:80 --mount source=azurenamingtoolvol,target=/app/settings 
 
 This process will allow you to deploy the Azure Naming Tool as a .NET application as an Azure Web App. This is the fastest deployment option and allows you to deploy and utilize your installation in minutes. This process includes creating a fork of the repository, then creating an Azure Web App. The provided GitHub Action will deploy your repository code on every commit. 
 
-**Fork the Cloud Adoption Frameowrk Repository**
+**Fork the Cloud Adoption Framework Repository**
 1. Scroll up to the top, left corner of this page.
 2. Click on the **CloudAdoptionFramework** link to open the root of this repository.
 3. Click the **Fork** option in the top right menu.
