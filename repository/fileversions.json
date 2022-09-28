@@ -1,4 +1,4 @@
 {
-  "resourcetypes.json": "1.0.0",
-  "resourcelocations.json": "1.0.0"
+  "resourcetypes": "1.0.0",
+  "resourcelocations": "1.0.0"
 }
