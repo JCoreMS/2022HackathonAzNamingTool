@@ -234,7 +234,7 @@ namespace AzureNamingTool.Services
                             newtype.Exclude = oldtype.Exclude;
                             newtype.Optional = oldtype.Optional;
                             newtype.Enabled= oldtype.Enabled;
-                            if (!shortNameReset)
+                            if ((!shortNameReset) || (oldtype.ShortName == ""))
                             {
                                 newtype.ShortName = oldtype.ShortName;
                             }
@@ -255,6 +255,12 @@ namespace AzureNamingTool.Services
                     
                     // Update the repository file
                     await FileSystemHelper.WriteFile("resourcetypes.json", refreshdata, "repository/");
+
+                    // Clear cached data
+                    GeneralHelper.InvalidateCacheObject("ResourceType");
+
+                    // Update the current configuration file version data information
+                    await GeneralHelper.UpdateConfigurationFileVersion("resourcetypes");
                 }
                 else
                 {
