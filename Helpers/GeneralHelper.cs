@@ -698,7 +698,7 @@ namespace AzureNamingTool.Helpers
             string versiondata = null;
             try
             {
-                versiondata = await DownloadString("https://raw.githubusercontent.com/aznamingtool/2022HackathonAzNamingTool/main/configurationfileversions.json");
+                versiondata = await DownloadString("https://raw.githubusercontent.com/microsoft/CloudAdoptionFramework/master/ready/AzNamingTool/configurationfileversions.json");
             }
             catch (Exception ex)
             {
