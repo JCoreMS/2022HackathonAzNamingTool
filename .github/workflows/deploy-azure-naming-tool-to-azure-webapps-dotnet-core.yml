@@ -97,6 +97,7 @@ jobs:
         uses: azure/powershell@v1
         with:
           inlineScript: |
+            Connect-azaccount -Identity
             $RG = (get-azwebapp | where-object Name -eq fta-aznamingtool).ResourceGroup
             Restart-AzWebApp -Name ${{ env.AZURE_WEBAPP_NAME }} -ResourceGroup $RG
           azPSVersion: "latest"
