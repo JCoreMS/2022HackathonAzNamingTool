@@ -38,12 +38,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+    
       - uses: actions/checkout@v3
 
       - name: Set up .NET Core
@@ -87,6 +82,10 @@ jobs:
           name: .net-app
 
       - name: Deploy to Azure Web App
+          steps:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
